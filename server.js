@@ -10,6 +10,7 @@ const client = require('./lib/client');
 
 // Application Setup
 const app = express();
+app.use(express.urlencoded({extended: true}));
 app.use(morgan('dev')); // http logging
 app.use(cors()); // enable CORS request
 app.use(express.static('public')); // server files from /public folder
@@ -36,10 +37,10 @@ app.post('/api/todos', async (req, res) => {
     try {
         const result = await client.query(`
             INSERT into todos (task, complete)
-            VALUES ($1, $2)
+            VALUES ($1, false)
             RETURNING *;
         `,
-            [req.body.todo, req.body.complete]);
+            [req.body.task]);
 
         res.json(result.rows[0]);
     }
@@ -50,6 +51,9 @@ app.post('/api/todos', async (req, res) => {
         });
     }
 });
+
+
+
 
 app.put('/api/todos/:id', async (req, res) => {
     const id = req.params.id;
