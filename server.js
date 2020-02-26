@@ -6,20 +6,17 @@ const express = require('express');
 const cors = require('cors');
 const morgan = require('morgan');
 // Initiate database connection
+const client = require('./lib/client');
 
 // Application Setup
 const app = express();
-const PORT = process.env.PORT;
 app.use(morgan('dev')); // http logging
 app.use(cors()); // enable CORS request
 app.use(express.static('public')); // server files from /public folder
 app.use(express.json()); // enable reading incoming json data
 // API Routes
 
-
 client.connect();
-const Client = pg.Client;
-const client = new Client(process.env.DATABASE_URL);
 const PORT = process.env.PORT || 3000;
 
 app.get('/api/todos', async(req, res) => {
